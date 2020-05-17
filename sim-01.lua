@@ -7,7 +7,6 @@
 local EXE
 EXE = {
     _ = function (cmd)
-        print('EXE',cmd)
         io.flush()
         local f = io.popen(cmd)
         local ret = f:read("*a")
@@ -27,7 +26,6 @@ EXE = {
     fc = function (cmd, port, opts)
         port = port or 8330
         opts = opts or ''
-        print('xxx')
         return EXE._('freechains --host=localhost:'..port..' '..opts..' '..cmd)
     end,
 }
@@ -57,15 +55,12 @@ end
 N = 21
 
 function bcast (h, t)
-    print'....'
     t = t or { [h]=true }
     for i in pairs(VS[h]) do
         if not t[i] then
             t[i] = true
-            EXE._ 'sleep 1'
-            print('>>>',h,i)
+            --EXE._ 'sleep 1'
             EXE.fc('chain send /chat localhost:'..(8400+i), 8400+h)
-            print('<<<',h,i)
             bcast(i,t)
         end
     end
@@ -96,9 +91,7 @@ for i=1,N do
 end
 
 EXE.fc('chain post /chat inline "Ola"', 8401, '--sign='..pvt0)
-print '>>>>>>>>>>>'
 bcast(1)
-print '<<<<<<<<<<<'
 
 v1 = EXE.fc('chain heads /chat all', 8410)
 v2 = EXE.fc('chain heads /chat all', 8415)
