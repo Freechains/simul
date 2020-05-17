@@ -7,6 +7,8 @@
 local EXE
 EXE = {
     _ = function (cmd)
+        print('EXE',cmd)
+        io.flush()
         local f = io.popen(cmd)
         local ret = f:read("*a")
         local ok = f:close()
@@ -25,17 +27,21 @@ EXE = {
     fc = function (cmd, port, opts)
         port = port or 8330
         opts = opts or ''
+        print('xxx')
         return EXE._('freechains --host=localhost:'..port..' '..opts..' '..cmd)
     end,
 }
 
-N = 25
+N = 21
 
 ES = {
-    {1,2}, {2,3}, {3,4}, {4,5}, {5,6}, {6,7}, {7,8}, {8,9}, {9,10},
-    {2,11}, {11,12},
-    {6,13}, {13,14}, {14,15}, {15,16}, {16,17}, {17,18}, {18,7},
-    {6,19}, {19,20}, {20,21}, {21,22}, {8,22}, {22,23}, {23,24}, {24,25}, {25,10},
+    --{1,2}, {2,3}, {3,4}, {4,5}, {5,6}, {6,7}, {7,8}, {8,9}, {9,10},
+    --{6,13}, {13,14}, {14,15}, {15,16}, {16,7},
+    --{6,17}, {17,18}, {18,19}, {7,19}, {19,20}, {20,21}, {21,8},
+    {1,2}, {2,3}, {3,6}, {6,7}, {7,8}, {8,9}, {9,10},
+    {2,11}, {11,12}, {12,2},
+    {6,14}, {14,15}, {15,7},
+    {6,17}, {17,19}, {7,19}, {19,21}, {21,8},
 }
 
 VS = {}
@@ -48,16 +54,20 @@ for _, e in ipairs(ES) do
     VS[e[2]][e[1]] = true
 end
 
+N = 21
+
 function bcast (h, t)
-    t = t or {}
-    if t[h] then
-        return
-    end
-    t[h] = true
+    print'....'
+    t = t or { [h]=true }
     for i in pairs(VS[h]) do
-        print('>>>',h,i)
-        EXE.fc('chain send /chat localhost:'..(8400+i), 8400+h)
-        bcast(i,t)
+        if not t[i] then
+            t[i] = true
+            EXE._ 'sleep 1'
+            print('>>>',h,i)
+            EXE.fc('chain send /chat localhost:'..(8400+i), 8400+h)
+            print('<<<',h,i)
+            bcast(i,t)
+        end
     end
 end
 
@@ -75,7 +85,7 @@ for i=1,N do
     EXE.bg('freechains host start /tmp/freechains/'..(8400+i))
 end
 
-EXE._ 'sleep 1'
+EXE._ 'sleep 5'
 
 pvt0 = '6F99999751DE615705B9B1A987D8422D75D16F5D55AF43520765FA8C5329F7053CCAF4839B1FDDF406552AF175613D7A247C5703683AEC6DBDF0BB3932DD8322'
 
@@ -86,10 +96,12 @@ for i=1,N do
 end
 
 EXE.fc('chain post /chat inline "Ola"', 8401, '--sign='..pvt0)
+print '>>>>>>>>>>>'
 bcast(1)
+print '<<<<<<<<<<<'
 
 v1 = EXE.fc('chain heads /chat all', 8410)
-v2 = EXE.fc('chain heads /chat all', 8416)
+v2 = EXE.fc('chain heads /chat all', 8415)
 
 print(os.time() - old)
 print(v1,v2)
