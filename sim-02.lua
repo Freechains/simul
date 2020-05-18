@@ -109,6 +109,7 @@ local VIEWER = {
 
 local msg  = 0
 local exit = false
+local fst_
 
 while true do
     local now = os.time()
@@ -121,6 +122,8 @@ while true do
             AUTHOR.time.nxt = now + normal(AUTHOR.period)
             if msg == 0 then
                 AUTHOR.nxt = now + INIT  -- first message --height 1-- must propagate
+            elseif msg == 1 then
+                fst_ = now
             end
 
             msg = msg + 1
@@ -157,9 +160,15 @@ while true do
             if tonumber(n) > 0 then
                 local cmd = 'sleep 0'
                 local t = {}
-                for j in pairs(VS[i]) do
+                local hs = {} do
+                    for k in pairs(VS[i]) do
+                        hs[#hs+1] = k
+                    end
+                end
+                while #hs > 0 do
+                    local j = table.remove(hs, math.random(1,#hs))
                     --print('',i,'->',j)
-                    local dt = normal(LATENCY)
+                    local dt = (LATENCY==0 and 0) or normal(LATENCY)
                     local cmd1 = 'sleep '..(dt/1000)
                     local cmd2 = 'freechains --host=localhost:'..(8400+i)..' chain send /id localhost:'..(8400+j)
                     cmd = cmd..' ; '..cmd1..' ; '..cmd2
@@ -173,7 +182,7 @@ end
 v1 = fc_('chain heads /id all', 8410)
 v2 = fc_('chain heads /id all', 8415)
 
-local dt = os.time() - fst
+local dt = os.time() - fst_
 
 for i=1,N do
     fc('host stop', 8400+i)
