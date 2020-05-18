@@ -53,8 +53,8 @@ for i=1,N do
     fc('host stop', 8400+i)
 end
 
---print('-=-=- REMOVE ALL -=-=-=-')
---io.read()
+print('-=-=- REMOVE ALL -=-=-=-')
+io.read()
 
 os.execute('rm -Rf /tmp/freechains')
 
@@ -91,9 +91,18 @@ local fst = os.time()
 local old = fst
 local nxt = old + normal(15)
 
-local min   = 60
+local s     = 1
+local min   = 60*s
 local hour  = 60*min
-local TOTAL = 1*hour
+
+local TOTAL  = 10*min   -- simulation time
+local INIT   = 20*s     -- wait time after 1st message
+local PERIOD = 15*s     -- period between two messages
+
+local LEN_50 = 50       -- message length
+local LEN_05 = 5        -- message length
+
+local LATENCY = 250     -- network latency (start time)
 
 local exit = false
 while true do
@@ -103,15 +112,18 @@ while true do
     end
     if (not exit) and (now >= nxt) then
         old = now
-        nxt = now + normal(15)
+        nxt = now + normal(PERIOD)
+        if msg == 0 then
+            nxt = now + INIT  -- first message --height 1-- must propagate
+        end
 
         msg = msg + 1
         local hst = math.random(N)
         local txt do
             if math.random(2) == 1 then
-                txt = '#'..msg..' - @'..hst..': '..string.rep('x',normal(50))
+                txt = '#'..msg..' - @'..hst..': '..string.rep('x',normal(LEN_50))
             else
-                txt = string.rep('x',normal(5))
+                txt = string.rep('x',normal(LEN_05))
             end
         end
         fc('chain post /chat inline "'..txt..'"', 8400+hst)
@@ -131,7 +143,7 @@ while true do
                 local t = {}
                 for j in pairs(VS[i]) do
                     --print('',i,'->',j)
-                    local dt = normal(250)
+                    local dt = normal(LATENCY)
                     local cmd1 = 'sleep '..(dt/1000)
                     local cmd2 = 'freechains --host=localhost:'..(8400+i)..' chain send /chat localhost:'..(8400+j)
                     cmd = cmd..' ; '..cmd1..' ; '..cmd2
