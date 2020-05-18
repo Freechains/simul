@@ -8,6 +8,7 @@ local socket = require 'socket'
 
 math.randomseed(os.time())
 function normal (n)
+    n = n/2
     local x
     repeat
         x = math.ceil(math.log(1/math.random())^.5*math.cos(math.pi*math.random())*150 + n/2)
@@ -88,7 +89,7 @@ end
 local msg = 0
 local fst = os.time()
 local old = fst
-local nxt = old + normal(30)
+local nxt = old + normal(15)
 
 local min   = 60
 local hour  = 60*min
@@ -102,11 +103,17 @@ while true do
     end
     if (not exit) and (now >= nxt) then
         old = now
-        nxt = now + normal(30)
+        nxt = now + normal(15)
 
         msg = msg + 1
         local hst = math.random(N)
-        local txt = '#'..msg..' - @'..hst..': '..string.rep('x',normal(100))
+        local txt do
+            if math.random(2) == 1 then
+                txt = '#'..msg..' - @'..hst..': '..string.rep('x',normal(50))
+            else
+                txt = string.rep('x',normal(5))
+            end
+        end
         fc('chain post /chat inline "'..txt..'"', 8400+hst)
     end
 
@@ -124,7 +131,7 @@ while true do
                 local t = {}
                 for j in pairs(VS[i]) do
                     --print('',i,'->',j)
-                    local dt = normal(500)
+                    local dt = normal(250)
                     local cmd1 = 'sleep '..(dt/1000)
                     local cmd2 = 'freechains --host=localhost:'..(8400+i)..' chain send /chat localhost:'..(8400+j)
                     cmd = cmd..' ; '..cmd1..' ; '..cmd2
