@@ -104,7 +104,7 @@ local AUTHOR = {
 local VIEWER = {
     period = AUTHOR.period / 50, -- 50 comments/post
     length = 50,                 -- message length (small comments)
-    time   = { old=fst,nxt=2*INIT }
+    time   = { old=fst,nxt=fst+2*INIT }
 }
 
 local msg  = 0
@@ -191,6 +191,5 @@ for i=1,N do
     fc('host stop', 8400+i)
 end
 
-print('TOTAL',   dt)
-print('HOST 10', v1)
-print('HOST 15', v2)
+print('TOTAL', dt)
+print('PARAMS', N, TOTAL, LATENCY)

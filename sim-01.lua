@@ -4,7 +4,7 @@ local socket = require 'socket'
 
 math.randomseed(os.time())
 function normal (n)
-    n = n/2
+    n = n * 2
     local x
     repeat
         x = math.ceil(math.log(1/math.random())^.5*math.cos(math.pi*math.random())*150 + n/2)
@@ -83,14 +83,14 @@ local sec   = 1
 local min   = 60*sec
 local hour  = 60*min
 
-local TOTAL  = 10*min   -- simulation time
+local TOTAL  =  5*min   -- simulation time
 local INIT   = 20*sec   -- wait time after 1st message
 local PERIOD = 15*sec   -- period between two messages
 
 local LEN_50 = 50       -- message length
 local LEN_05 = 5        -- message length
 
-local LATENCY =  0      -- network latency (start time)
+local LATENCY = 20      -- network latency (start time)
 
 local msg  = 0
 local fst  = os.time()
@@ -164,6 +164,5 @@ for i=1,N do
     fc('host stop', 8400+i)
 end
 
-print('TOTAL',   dt)
-print('HOST 10', v1)
-print('HOST 15', v2)
+print('TOTAL', dt)
+print('PARAMS', N, TOTAL, PERIOD, LEN_50,LEN_05, LATENCY)

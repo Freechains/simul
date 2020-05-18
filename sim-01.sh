@@ -17,8 +17,6 @@
     # TOTAL 2133
 # tst-09: N=21, TOTAL=10*min, 15s, 50/5b,   0ms     (I5-1)
     # TOTAL	 910
-# tst-10: N=21, TOTAL=10*min, 15s, 50/5b,   0ms     (I7-1)
-# tst-11: N=21, TOTAL=10*min, 15s, 50/5b,   0ms     (I5-2)
 
 for i in *;
 do
