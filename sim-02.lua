@@ -88,8 +88,8 @@ local _hour = _day  / 24
 local _min  = _hour / 60
 local _sec  = _min  / 60
 
-local TOTAL   = 3*_day      -- simulation time
-local INIT    = 1*min       -- wait time after 1st message
+local TOTAL   = 10*min      -- simulation time
+local INIT    = 20*sec      -- wait time after 1st message
 local LATENCY = 250         -- network latency (start time)
 
 local fst = os.time()
@@ -129,6 +129,9 @@ while true do
             msg = msg + 1
             local hst = AUTHOR.hosts[math.random(#AUTHOR.hosts)]
             local LEN = normal(AUTHOR.length)
+            if msg == 1 then
+                LEN = 10
+            end
             while LEN > 0 do
                 local len = math.min(LEN,127500)
                 local txt = '#'..msg..' - @'..hst..': '..string.rep('x',len)

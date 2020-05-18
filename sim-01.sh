@@ -1,22 +1,24 @@
 #!/bin/sh
 
-# tst-01: N=21, TOTAL=1*h,    15s, 50/5b, 250ms     (I7)
-# tst-02: N=21, TOTAL=10*min, 15s, 50/5b, 250ms     (I7)
+# tst-01: N=21, TOTAL=1*h,    15s, 50/5b, 250ms     (I7-1)
+# tst-02: N=21, TOTAL=10*min, 15s, 50/5b, 250ms     (I7-1)
     # TOTAL	2030
-# tst-03: N=21, TOTAL=10*min, 15s, 50/5b, 250ms     (I7)
+# tst-03: N=21, TOTAL=10*min, 15s, 50/5b, 250ms     (I7-1)
     # TOTAL	2069
-# tst-04: N=21, TOTAL=10*min, 15s, 50/5b,  20ms     (I7)
+# tst-04: N=21, TOTAL=10*min, 15s, 50/5b,  20ms     (I7-1)
     # TOTAL	1922
-# tst-05: N=21, TOTAL=10*min, 15s, 50/5b,  20ms     (I5)
+# tst-05: N=21, TOTAL=10*min, 15s, 50/5b,  20ms     (I5-1)
     # TOTAL	 926
-# tst-06: N=21, TOTAL=10*min, 15s, 50/5b,  20ms     (I7)
+# tst-06: N=21, TOTAL=10*min, 15s, 50/5b,  20ms     (I7-1)
     # TOTAL	 ???
-# tst-07: N=21, TOTAL=10*min, 15s, 50/5b,  20ms     (I5)
+# tst-07: N=21, TOTAL=10*min, 15s, 50/5b,  20ms     (I5-1)
     # TOTAL  ???
-# tst-08: N=21, TOTAL=10*min, 15s, 50/5b,   0ms     (I7)
+# tst-08: N=21, TOTAL=10*min, 15s, 50/5b,   0ms     (I7-1)
     # TOTAL 2133
-# tst-09: N=21, TOTAL=10*min, 15s, 50/5b,   0ms     (I5)
+# tst-09: N=21, TOTAL=10*min, 15s, 50/5b,   0ms     (I5-1)
     # TOTAL	 910
+# tst-10: N=21, TOTAL=10*min, 15s, 50/5b,   0ms     (I7-1)
+# tst-11: N=21, TOTAL=10*min, 15s, 50/5b,   0ms     (I5-2)
 
 for i in *;
 do
