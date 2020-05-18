@@ -2,6 +2,10 @@
 
 # tst-01: N=21, TOTAL=1*h,    15s, 50/5b, 250ms
 # tst-02: N=21, TOTAL=10*min, 15s, 50/5b, 250ms
+    # TOTAL	2030
+# tst-03: N=21, TOTAL=10*min, 15s, 50/5b, 250ms
+    # TOTAL	2069
+# tst-04: N=21, TOTAL=10*min, 15s, 50/5b, 20ms
 
 for i in *;
 do
@@ -9,28 +13,40 @@ do
     find $i | wc
 done
     # 216 216 20265
+    # 142 142 13099
+    # 144 144 13301     (not sync!)
 
 du -sh 8401/
     # 888K
+    # 584K
+    # 592K
 
 find 8401 -name "*.blk" | xargs jq -r .pay | wc
     # 210 836 13507
+    # 136 375  2143
+    # 138 398  2373
 
 echo "1350700/888" | bc
     # 15.21%
+    #  3.66%
+    #  4.00%
 
-cd 8401/
+# total of blocks with same height
+cd 8401/chains/chat/blocks
 ls | sed 's/_.*//' | uniq -c | sort -rn
-    # 10 96
-    #  6 97
-    #  5 48
+    # 10,6,5
+    #  9,7,7
+    #  9,7,6
 
-cd chains/chat/blocks/
-/data/freechains/simul/ana-01.lua *.blk | sort -rn
-    # 69	97_C9ECD9216242DE31B3FFF213EB46982035870EC0C27AC6FDBBDA71F4F43A6E2C.blk
-    # 38	86_FB3217D3EBAAA75FF5342567012BCE4993FC574543CF09AB83E6E4901B6B78F8.blk
-    # 25	94_75EB656946826543BC01F1F1AE33C7F9AACC4220D0B1161624746830CAD5F900.blk
-    # 21	69_A292DE462D1747EE1A9CE504496A68094BF37EC73DEEF5949604A6D26748E845.blk
+# max height delta between height and backs
+/data/freechains/simul/ana-01-height.lua *.blk | sort -n
+    # 69,38,25,21
+    # 17,16,14,13
+    # 14,14,14,14
 
 # 10 highest delta diffs immut.time/local
-find . -name "*.blk" -exec /data/freechains/simul/ana-01-time.lua {} \; | sort -n | tail -n 50
+cd <tst-xx>/
+find . -name "*.blk" -exec /data/freechains/simul/ana-01-time.lua {} \; | grep -v blocks/0_ | sort -n | tail -n 50
+    # 13x10, 11x10, 10x10
+    # 13x10, 11x10, 8x10
+    #  8x30
