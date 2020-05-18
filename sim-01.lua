@@ -90,7 +90,7 @@ local PERIOD = 15*sec   -- period between two messages
 local LEN_50 = 50       -- message length
 local LEN_05 = 5        -- message length
 
-local LATENCY = 20      -- network latency (start time)
+local LATENCY =  0      -- network latency (start time)
 
 local msg  = 0
 local fst  = os.time()
@@ -144,7 +144,7 @@ while true do
                 while #hs > 0 do
                     local j = table.remove(hs, math.random(1,#hs))
                     --print('',i,'->',j)
-                    local dt = normal(LATENCY)
+                    local dt = (LATENCY==0 and 0) or normal(LATENCY)
                     local cmd1 = 'sleep '..(dt/1000)
                     local cmd2 = 'freechains --host=localhost:'..(8400+i)..' chain send /chat localhost:'..(8400+j)
                     cmd = cmd..' ; '..cmd1..' ; '..cmd2
