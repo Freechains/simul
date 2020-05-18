@@ -52,6 +52,9 @@ for i=1,N do
     fc('host stop', 8400+i)
 end
 
+--print('-=-=- REMOVE ALL -=-=-=-')
+--io.read()
+
 os.execute('rm -Rf /tmp/freechains')
 
 for i=1,N do
@@ -79,18 +82,25 @@ for i=1,N do
     fc('chain join /chat trusted', 8400+i)
 end
 
+--print'-=-=- GO -=-=-=-'
+--io.read()
+
 local msg = 0
 local fst = os.time()
 local old = fst
 local nxt = old + normal(30)
 
+local min   = 60
+local hour  = 60*min
+local TOTAL = 1*hour
+
 local exit = false
 while true do
     local now = os.time()
-    if now >= fst+300 then
+    if now >= fst+TOTAL then
         exit = true
     end
-    if now >= nxt then
+    if (not exit) and (now >= nxt) then
         old = now
         nxt = now + normal(30)
 
@@ -104,16 +114,22 @@ while true do
     if exit and #ss==0 then
         break
     end
-    for i=1,#ss do
-        for j=1,N do
-            if ss[i] == SS[j] then
-                print('DATA on', j)
-                local n = ss[i]:receive('*l')
-                if tonumber(n) > 0 then
-                    for k in pairs(VS[j]) do
-                        fc('chain send /chat localhost:'..(8400+k)..' &', 8400+j)
-                    end
+    local s = ss[1]
+    for i=1,N do
+        if s == SS[i] then
+            --print('DATA on', i)
+            local n = s:receive('*l')
+            if tonumber(n) > 0 then
+                local cmd = 'sleep 0'
+                local t = {}
+                for j in pairs(VS[i]) do
+                    --print('',i,'->',j)
+                    local dt = normal(500)
+                    local cmd1 = 'sleep '..(dt/1000)
+                    local cmd2 = 'freechains --host=localhost:'..(8400+i)..' chain send /chat localhost:'..(8400+j)
+                    cmd = cmd..' ; '..cmd1..' ; '..cmd2
                 end
+                os.execute(cmd..' &')
             end
         end
     end
@@ -122,5 +138,12 @@ end
 v1 = fc_('chain heads /chat all', 8410)
 v2 = fc_('chain heads /chat all', 8415)
 
-print(os.time() - fst)
-print(v1,v2)
+local dt = os.time() - fst
+
+for i=1,N do
+    fc('host stop', 8400+i)
+end
+
+print('TOTAL',   dt)
+print('HOST 10', v1)
+print('HOST 15', v2)
