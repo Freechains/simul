@@ -2,10 +2,6 @@
 
 local socket = require 'socket'
 
--- fazer uma topologia mais complexa
--- verificar que o tempo vai subir muito mesmo com a Hmax igual
--- usar socket.select/listen para disparar em BG os seus sends
-
 math.randomseed(os.time())
 function normal (n)
     n = n/2
@@ -86,25 +82,25 @@ end
 --print'-=-=- GO -=-=-=-'
 --io.read()
 
-local msg = 0
-local fst = os.time()
-local old = fst
-local nxt = old + normal(15)
-
-local s     = 1
-local min   = 60*s
+local sec   = 1
+local min   = 60*sec
 local hour  = 60*min
 
 local TOTAL  = 10*min   -- simulation time
-local INIT   = 20*s     -- wait time after 1st message
-local PERIOD = 15*s     -- period between two messages
+local INIT   = 20*sec   -- wait time after 1st message
+local PERIOD = 15*sec   -- period between two messages
 
 local LEN_50 = 50       -- message length
 local LEN_05 = 5        -- message length
 
 local LATENCY = 250     -- network latency (start time)
 
+local msg  = 0
+local fst  = os.time()
+local old  = fst
+local nxt  = fst
 local exit = false
+
 while true do
     local now = os.time()
     if now >= fst+TOTAL then
