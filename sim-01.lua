@@ -49,8 +49,8 @@ for i=1,N do
     fc('host stop', 8400+i)
 end
 
-print('-=-=- REMOVE ALL -=-=-=-')
-io.read()
+--print('-=-=- REMOVE ALL -=-=-=-')
+--io.read()
 
 os.execute('rm -Rf /tmp/freechains')
 
@@ -83,14 +83,14 @@ local sec   = 1
 local min   = 60*sec
 local hour  = 60*min
 
-local TOTAL  =  5*min   -- simulation time
+local TOTAL  = 10*min   -- simulation time
 local INIT   = 20*sec   -- wait time after 1st message
 local PERIOD = 15*sec   -- period between two messages
 
 local LEN_50 = 50       -- message length
 local LEN_05 = 5        -- message length
 
-local LATENCY = 20      -- network latency (start time)
+local LATENCY = 250     -- network latency (start time)
 
 local msg  = 0
 local fst  = os.time()

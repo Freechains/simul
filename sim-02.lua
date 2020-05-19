@@ -49,8 +49,8 @@ for i=1,N do
     fc('host stop', 8400+i)
 end
 
-print('-=-=- REMOVE ALL -=-=-=-')
-io.read()
+--print('-=-=- REMOVE ALL -=-=-=-')
+--io.read()
 
 os.execute('rm -Rf /tmp/freechains')
 
