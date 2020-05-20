@@ -88,7 +88,7 @@ local _hour = _day  / 24
 local _min  = _hour / 60
 local _sec  = _min  / 60
 
-local TOTAL   = 10*min      -- simulation time
+local TOTAL   = 5*min      -- simulation time
 local INIT    = 20*sec      -- wait time after 1st message
 local LATENCY = 250         -- network latency (start time)
 
@@ -122,8 +122,6 @@ while true do
             AUTHOR.time.nxt = now + normal(AUTHOR.period)
             if msg == 0 then
                 AUTHOR.nxt = now + INIT  -- first message --height 1-- must propagate
-            elseif msg == 1 then
-                fst_ = now
             end
 
             msg = msg + 1
@@ -143,6 +141,10 @@ while true do
         if now >= VIEWER.time.nxt then
             VIEWER.time.old = now
             VIEWER.time.nxt = now + normal(VIEWER.period)
+
+            if fst_==nil and msg>0 then
+                fst_ = now
+            end
 
             msg = msg + 1
             local hst = math.random(N)
